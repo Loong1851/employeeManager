@@ -177,14 +177,3 @@ Applied by the migration through `HasData`, so `dotnet ef database update` and
 Departments 6–10 have no permanent staff, which is useful when you need a department an
 employee is not already assigned to.
 
-## Submitting
-
-Before you zip:
-
-```bash
-dotnet build      # must succeed with no errors
-dotnet test       # must pass
-```
-
-Exclude `bin/`, `obj/` and `.vs/` from your ZIP — `.gitignore` already excludes them from
-source control. Name the ZIP as specified in the assignment brief.

@@ -40,14 +40,11 @@ namespace EmployeeManager.API.Controllers
         [ProducesResponseType(typeof(IEnumerable<EmployeeResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult> GetEmployees(CancellationToken cancellationToken)
         {
-            //Returning every row is fine for 100 seeded records, but think about
-            //paging and projection before doing this against a real table.
+
             _logger.LogInformation("Fetching all employees");
 
             var employees = await _employeeRepository.GetAllEmployees(cancellationToken);
 
-            //An empty list is a valid result for a collection endpoint: 200 with [],
-            //not 404. 404 means "this URL identifies nothing", which is not the case here.
             return Ok(employees.Select(ToResponse).ToList());
         }
 
@@ -86,9 +83,6 @@ namespace EmployeeManager.API.Controllers
                     nameof(request.DepartmentId),
                     $"Department {request.DepartmentId} does not exist.");
 
-                //Returns 400 with the same RFC 7807 ValidationProblemDetails body that
-                //[ApiController] produces for annotation failures, so clients see one
-                //consistent error shape.
                 return BadRequest(new ValidationProblemDetails(ModelState)
                 {
                     Status = StatusCodes.Status400BadRequest
@@ -123,9 +117,7 @@ namespace EmployeeManager.API.Controllers
             [FromBody] UpdateEmployeeRequest request,
             CancellationToken cancellationToken)
         {
-            //Precedence step 1: does the resource exist? A 404 outranks a 400.
-            //Validating the body first would answer "your department id is wrong" for a
-            //URL that identifies nothing, which tells the client to fix the wrong thing.
+
             var existing = await _employeeRepository.GetEmployeeById(id, cancellationToken);
 
             if (existing is null) return NotFound();
