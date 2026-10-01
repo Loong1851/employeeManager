@@ -42,7 +42,7 @@ namespace EmployeeManager.API
             //Add dbContext
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetSection("ConnectionStrings:EmployeeDB").Value);  //GetConnectionString("EmployeeDB")
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));  //GetConnectionString("EmployeeDB")
             });
 
             var app = builder.Build();
